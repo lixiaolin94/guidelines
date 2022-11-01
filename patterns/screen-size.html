@@ -11,6 +11,7 @@
     }
 
     .grid {
+      padding: 16px;
       width: 640px;
       display: grid;
       grid-template-columns: repeat(8, 1fr);
@@ -28,6 +29,10 @@
     .result {
       color: blue;
     }
+
+    label:disabled {
+      opacity: 0.5;
+    }
   </style>
   <script src="https://unpkg.com/vue@next"></script>
 
@@ -36,40 +41,41 @@
 <body>
   <div id="app" class="grid">
     <label class="column-2">配置</label>
-    <select class="column-4">
+    <select class="column-4" v-model="preset">
+      <option value="custom" selected>自定义</option>
       <option value="theater">影院 1.0</option>
       <option value="home">家（室内）</option>
       <option value="beach">海滩（室外）</option>
       <option value="imax">IMAX 影院</option>
       <option value="world-cup">世界杯</option>
-      <option value="custom">自定义</option>
     </select>
     <span class="column-2"></span>
 
-    <label class="column-2">水平 FOV</label>
-    <input class="column-4" type="range" min="0.1" max="179.9" step="0.1" v-model="fov">
-    <input type="number" min="0.1" max="179.9" step="0.1" v-model="fov">
-    <label>度</label>
+    <label :disabled="disabled" class="column-2">水平 FOV</label>
+    <input :disabled="disabled" class="column-4" type="range" min="5" max="160" step="0.1" v-model="config.fov">
+    <input :disabled="disabled" type="number" min="5" max="160" step="0.1" v-model="config.fov">
+    <label :disabled="disabled">度</label>
 
-    <label class="column-2">默认观影距离</label>
-    <input class="column-4" type="range" min="1" max="60" step="0.1" v-model="distance">
-    <input type="number" min="1" max="60" step="0.1" v-model="distance">
-    <label>米</label>
+    <label :disabled="disabled" class="column-2">默认观影距离</label>
+    <input :disabled="disabled" class="column-4" type="range" min="1" max="60" step="0.1" v-model="config.distance">
+    <input :disabled="disabled" type="number" min="1" max="60" step="0.1" v-model="config.distance">
+    <label :disabled="disabled">米</label>
 
-    <label class="column-2">观影视线高度</label>
-    <input class="column-4" type="range" min="0.25" max="2" step="0.01" v-model="eye">
-    <input type="number" min="0.25" max="2" step="0.01" v-model="eye">
-    <label>米</label>
+    <label :disabled="disabled" class="column-2">观影视线高度</label>
+    <input :disabled="disabled" class="column-4" type="range" min="0.25" max="2" step="0.01" v-model="config.eye">
+    <input :disabled="disabled" type="number" min="0.25" max="2" step="0.01" v-model="config.eye">
+    <label :disabled="disabled">米</label>
 
-    <label class="column-2">仰角</label>
-    <input class="column-4" type="range" min="-30" max="30" step="0.01" v-model="elevation">
-    <input type="number" min="-30" max="30" step="0.01" v-model="elevation">
-    <label>度</label>
+    <label :disabled="disabled" class="column-2">{{ config.elevation > 0 ? "仰角" : "俯角"}}</label>
+    <input :disabled="disabled" class="column-4" type="range" min="-30" max="30" step="0.01" v-model="config.elevation">
+    <input :disabled="disabled" type="number" min="-30" max="30" step="0.01" v-model="config.elevation">
+    <label :disabled="disabled">度</label>
 
     <span class="column-4 result">屏幕宽：{{ screen.width.round(2) }} 米</span>
     <span class="column-4 result">屏幕高 [4:3]：{{ screen.height["4-3"].round(2) }} 米</span>
     <span class="column-4 result">屏幕中心：{{ screen.centerY.round(2) }} 米</span>
     <span class="column-4 result">屏幕高 [16:9]：{{ screen.height["16-9"].round(2) }} 米</span>
+    <span class="column-4 result">屏幕海拔：{{ screen.elevation.round(2) }} 米</span>
 
   </div>
 
@@ -86,8 +92,7 @@
       return 2 * Math.tan(fov / 2 * DEG2RAD) * distance;
     }
 
-
-    class Config {
+    class Preset {
       constructor(fov, distance, eye, elevation) {
         this.fov = fov;
         this.distance = distance;
@@ -96,32 +101,68 @@
       }
     }
 
-    const configOld = new Config(69.33, 47, 1, 1);
+    const presetTheater = new Preset(69.33, 47, 1, 1);
+    const presetHome = new Preset(64, 8, 1, 16.36);
+    const presetBeach = new Preset(61.93, 10, 1, 16.36);
+    const presetImax = new Preset(65.15, 18, 1, 1);
+    const presetWorldCup = new Preset(56.89, 36, 1, 1);
 
     Vue.createApp({
       data() {
         return {
-          fov: 64,
-          distance: 8,
-          eye: 1,
-          elevation: 16,
+          disabled: false,
+          preset: "custom",
+          config: {
+            fov: 70,
+            distance: 12,
+            eye: 1,
+            elevation: -3,
+          },
+        }
+      },
+      watch: {
+        preset(value) {
+          if (value === "custom") {
+            this.disabled = false;
+          } else {
+            this.disabled = true;
+            switch (value) {
+              case "theater":
+                this.config = presetTheater;
+                break;
+              case "home":
+                this.config = presetHome;
+                break;
+              case "beach":
+                this.config = presetBeach;
+                break;
+              case "imax":
+                this.config = presetImax;
+                break;
+              case "world-cup":
+                this.config = presetWorldCup;
+                break;
+            }
+          }
         }
       },
       computed: {
-        screen() {
-          const width = fovToLength(this.fov, this.distance);
-          const height = {
-            "4-3": width * 3 / 4,
-            "16-9": width * 9 / 16
-          };
-          const centerY = fovToLength(this.elevation, this.distance) + height["4-3"] / 2;
-          return {
-            width,
-            height,
-            centerY
-          };
-        }
+      screen() {
+        const width = fovToLength(this.config.fov, this.config.distance);
+        const height = {
+          "4-3": width * 3 / 4,
+          "16-9": width * 9 / 16
+        };
+        const centerY = fovToLength(this.config.elevation, this.config.distance) + Number(this.config.eye);
+        const elevation = centerY - height["4-3"] / 2;
+        return {
+          width,
+          height,
+          centerY,
+          elevation,
+        };
       }
+    }
     }).mount("#app");
 
   </script>
