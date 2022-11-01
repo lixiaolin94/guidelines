@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Screen</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/dat.gui@0.7.9/build/dat.gui.min.js"></script>
+
+
+</head>
+
+<body>
+  <div>
+    <div>
+      <div id="screen"></div>
+    </div>
+  </div>
+
+  <script>
+    if (!Number.prototype.round) {
+      Number.prototype.round = function (digits = 0) {
+        const multiplier = Math.pow(10, digits);
+        return Math.round(this * multiplier) / multiplier;
+      }
+    }
+
+    const fovToLength = function (fov, distance) {
+      const DEG2RAD = 0.017453292;
+      return 2 * Math.tan(fov / 2 * DEG2RAD) * distance;
+    }
+
+    const getPresetJSON = function () {
+      return {
+        "preset": "自定义",
+        "closed": false,
+        "remembered": {
+          "自定义": {
+            "0": {
+              "fov": 70,
+              "distance": 12,
+              "eye": 1,
+              "elevation": -3
+            }
+          },
+          "影院 1.0": {
+            "0": {
+              "fov": 69.33,
+              "distance": 47,
+              "eye": 1,
+              "elevation": 1
+            }
+          },
+          "家（室内）": {
+            "0": {
+              "fov": 64,
+              "distance": 8,
+              "eye": 1,
+              "elevation": 16.36
+            }
+          },
+          "海滩（室外）": {
+            "0": {
+              "fov": 61.93,
+              "distance": 10,
+              "eye": 1,
+              "elevation": 16.36
+            }
+          },
+          "IMAX 影院": {
+            "0": {
+              "fov": 65.15,
+              "distance": 18,
+              "eye": 1,
+              "elevation": 1
+            }
+          },
+          "世界杯": {
+            "0": {
+              "fov": 56.89,
+              "distance": 36,
+              "eye": 1,
+              "elevation": 1
+            }
+          },
+        },
+        "folders": {}
+      }
+    };
+
+    const gui = new dat.GUI({ load: getPresetJSON() });
+    gui.width = 266;
+
+    let config = getPresetJSON().remembered["自定义"][0];
+    gui.remember(config);
+    gui.add(config, 'fov', 5, 160).step(0.01).name('水平 FOV').onChange(compute);
+    gui.add(config, 'distance', 1, 60).step(0.01).name('最佳观影距离').onChange(compute);
+    gui.add(config, 'eye', 0.25, 2).step(0.01).name('视线高度').onChange(compute);
+    gui.add(config, 'elevation', -30, 30).step(0.01).name('仰/俯角').onChange(compute);
+
+    let result;
+
+    function compute() {
+      const width = fovToLength(config.fov, config.distance);
+      const height = {
+        "4-3": width * 3 / 4,
+        "16-9": width * 9 / 16
+      };
+      const centerY = fovToLength(config.elevation, config.distance) + Number(config.eye);
+      const elevation = centerY - height["4-3"] / 2;
+      result = { width, height, centerY, elevation };
+    }
+
+    compute();
+
+
+  </script>
+</body>
+
+</html>
