@@ -5,9 +5,59 @@
   <meta charset="UTF-8">
   <title>Screen</title>
   <style>
-    body {
+    html, body{
       margin: 0;
       padding: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .container{
+      overflow: hidden;
+      width: 50%;
+      height: 100%;
+      background-color: azure;
+    }
+
+    .absolute-center {
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      margin: auto;
+    }
+
+    .end-view {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .end-view-user {
+      position: absolute;
+      width: 60px;
+      height: 130px;
+      background-color: bisque;
+    }
+    
+    .end-view-floor {
+      position: absolute;
+      width: 100%;
+      height: 50%;
+      background-color: gainsboro;
+    }
+
+    .end-view-screen {
+      position: absolute;
+      width: 16px;
+      background-color: black;
+    }
+
+    .end-view-horizon {
+      position: absolute;
+      width: 100%;
+      height: 0;
+      border: 0.01px solid black;
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/dat.gui@0.7.9/build/dat.gui.min.js"></script>
@@ -16,10 +66,13 @@
 </head>
 
 <body>
-  <div>
-    <div>
-      <div id="screen"></div>
+  <div class="container">
+    <div class="end-view">
+      <div class="end-view-floor absolute-center"></div>
+      <div class="end-view-user absolute-center"></div>
+      <div class="end-view-screen absolute-center"></div>
     </div>
+    <div class="end-view-horizon absolute-center"></div>
   </div>
 
   <script>
@@ -44,7 +97,7 @@
             "0": {
               "fov": 70,
               "distance": 12,
-              "eye": 1,
+              "eye": 1.2,
               "elevation": -3
             }
           },
@@ -52,7 +105,7 @@
             "0": {
               "fov": 69.33,
               "distance": 47,
-              "eye": 1,
+              "eye": 1.2,
               "elevation": 1
             }
           },
@@ -60,7 +113,7 @@
             "0": {
               "fov": 64,
               "distance": 8,
-              "eye": 1,
+              "eye": 1.2,
               "elevation": 16.36
             }
           },
@@ -68,7 +121,7 @@
             "0": {
               "fov": 61.93,
               "distance": 10,
-              "eye": 1,
+              "eye": 1.2,
               "elevation": 16.36
             }
           },
@@ -76,7 +129,7 @@
             "0": {
               "fov": 65.15,
               "distance": 18,
-              "eye": 1,
+              "eye": 1.2,
               "elevation": 1
             }
           },
@@ -84,7 +137,7 @@
             "0": {
               "fov": 56.89,
               "distance": 36,
-              "eye": 1,
+              "eye": 1.2,
               "elevation": 1
             }
           },
@@ -93,15 +146,23 @@
       }
     };
 
+    let config = getPresetJSON().remembered["自定义"][0];
+
     const gui = new dat.GUI({ load: getPresetJSON() });
     gui.width = 266;
-
-    let config = getPresetJSON().remembered["自定义"][0];
     gui.remember(config);
     gui.add(config, 'fov', 5, 160).step(0.01).name('水平 FOV').onChange(compute);
     gui.add(config, 'distance', 1, 60).step(0.01).name('最佳观影距离').onChange(compute);
     gui.add(config, 'eye', 0.25, 2).step(0.01).name('视线高度').onChange(compute);
-    gui.add(config, 'elevation', -30, 30).step(0.01).name('仰/俯角').onChange(compute);
+    gui.add(config, 'elevation', -30, 30).step(0.01).name('俯角').onChange(function(value) {
+      this.name(value < 0 ? "俯角" : "仰角");
+      compute();
+    });
+
+    const endView = document.querySelector('.end-view');
+    const endViewUser = document.querySelector('.end-view-user');
+    const endViewFloor = document.querySelector('.end-view-floor');
+    const endViewScreen = document.querySelector('.end-view-screen');
 
     let result;
 
@@ -113,11 +174,26 @@
       };
       const centerY = fovToLength(config.elevation, config.distance) + Number(config.eye);
       const elevation = centerY - height["4-3"] / 2;
+
+      endView.style.transform = `scale(${(document.body.clientWidth / 2) / ((config.distance + 2) * 100)})`;
+      endViewUser.style.transform = `translateX(-${config.distance * 100 / 2}px) translateY(calc(-50% + 120px - ${config.eye * 100}px))`;
+      endViewScreen.style.height = `${height["4-3"] * 100}px`;
+      endViewScreen.style.transform = `translateX(${config.distance * 100 / 2}px) translateY(${-centerY * 100}px)`;
       result = { width, height, centerY, elevation };
     }
 
     compute();
 
+    
+
+    function update() {
+      endView.style.width = `${result.width.round(2)}px`;
+      endView.style.height = `${result.height["4-3"].round(2)}px`;
+      endView.style.marginTop = `${result.elevation.round(2)}px`;
+      endViewUser.style.top = `${result.centerY.round(2)}px`;
+      endViewScreen.style.top = `${result.centerY.round(2)}px`;
+      endViewScreen.style.left = `${result.width.round(2)}px`;
+    }
 
   </script>
 </body>
