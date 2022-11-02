@@ -5,18 +5,25 @@
   <meta charset="UTF-8">
   <title>Screen</title>
   <style>
-    html, body{
+    html,
+    body {
       margin: 0;
       padding: 0;
       width: 100%;
       height: 100%;
     }
 
-    .container{
+    #app {
+      width: 100%;
+      height: 100%;
+    }
+
+    .container {
+      position: relative;
+      float: left;
       overflow: hidden;
       width: 50%;
       height: 100%;
-      background-color: azure;
     }
 
     .absolute-center {
@@ -37,43 +44,116 @@
       position: absolute;
       width: 60px;
       height: 130px;
-      background-color: bisque;
-    }
-    
-    .end-view-floor {
-      position: absolute;
-      width: 100%;
-      height: 50%;
-      background-color: gainsboro;
+      background-color: gold;
     }
 
-    .end-view-screen {
+    .end-view-screen-133 {
       position: absolute;
-      width: 16px;
+      width: 32px;
       background-color: black;
     }
 
-    .end-view-horizon {
+    .end-view-screen-177 {
       position: absolute;
       width: 100%;
-      height: 0;
-      border: 0.01px solid black;
+      height: 75.1%;
+      background-color: aqua;
+    }
+
+    .end-view-screen-239 {
+      position: absolute;
+      width: 100%;
+      height: 55.6%;
+      background-color: fuchsia;
+    }
+
+    .line {
+      position: absolute;
+      width: 100%;
+      height: 1px;
+      border-bottom-width: 1px;
+      border-bottom-style: dashed;
+    }
+
+    .end-view-eye {
+      border-color: fuchsia;
+      transform: translateY(-50%);
+      opacity: 0.2;
+    }
+
+    .end-view-elevation {
+      width: 150%;
+      border-color: fuchsia;
+      transform-origin: left center;
+    }
+
+    .end-view-horizon {
+      border-color: black;
+      transform: translateY(-50%);
+      opacity: 0.2;
+    }
+
+    .end-view-floor {
+      width: 150%;
+      border-color: black;
+      transform-origin: left center;
+    }
+
+    .end-view-result {
+      position: absolute;
+      left: 16px;
+      top: 16px;
+      font-size: 12px;
+      line-height: 20px;
+      color: blue;
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/dat.gui@0.7.9/build/dat.gui.min.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@latest/dist/svg.min.js"></script>
 
 </head>
 
 <body>
-  <div class="container">
-    <div class="end-view">
-      <div class="end-view-floor absolute-center"></div>
-      <div class="end-view-user absolute-center"></div>
-      <div class="end-view-screen absolute-center"></div>
+  <div id="app">
+    <div class="container">
+      <div class="end-view">
+        <div class="end-view-user absolute-center">
+          <svg width="160" height="130" viewBox="0 0 160 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip0_2_2)">
+            <rect width="160" height="130" fill="white"/>
+            <path d="M40.8982 40.0469L62.6995 86.3327C65.1517 91.539 62.2021 97.6839 56.6061 99.027C48.5358 100.964 40.1676 97.2595 36.1756 89.9831L12.4243 46.6895C8.30677 39.1842 13.2233 29.9169 21.7465 29.1178C29.7951 28.3633 37.4535 32.7336 40.8982 40.0469Z" fill="#E6E6E6" stroke="black" stroke-width="0.5"/>
+            <path d="M32.4311 34.5464L56.4501 59.6244C57.6724 60.9007 58.1385 62.7232 57.6788 64.4296C56.8101 67.6544 53.1058 69.1621 50.232 67.4607L20.3514 49.7698C16.1904 47.3063 14.4459 42.1776 16.2418 37.6879C18.8907 31.0657 27.4977 29.3955 32.4311 34.5464Z" fill="#E6E6E6" stroke="black" stroke-width="0.5"/>
+            <path d="M54.9256 57.1899L92.1069 65.8359C92.8448 66.0075 93.4805 66.4735 93.8663 67.1256C95.0062 69.0526 93.5116 71.4666 91.2784 71.3051L53.2046 68.552C49.0087 68.2486 46.541 63.6978 48.5759 60.0158C49.8225 57.76 52.4153 56.6061 54.9256 57.1899Z" fill="#E6E6E6" stroke="black" stroke-width="0.5"/>
+            <path d="M93.0976 65.9758L97.4745 64.5228C99.0208 64.0096 100.686 63.9735 102.253 64.4194L110.343 66.7217C112.342 67.2906 112.089 70.2012 110.021 70.4155L94.4009 72.0343C92.852 72.1948 91.4223 71.1876 91.0521 69.675C90.6659 68.0973 91.5561 66.4876 93.0976 65.9758Z" fill="#E6E6E6" stroke="black" stroke-width="0.5"/>
+            <path d="M52.1658 76.0505L106.674 70.3329C109.462 70.0404 112.189 71.28 113.803 73.5723C116.955 78.052 114.577 84.2986 109.244 85.548L55.8814 98.0494C49.6824 99.5016 43.5243 95.4901 42.3473 89.2331C41.1398 82.8142 45.67 76.7319 52.1658 76.0505Z" fill="#E6E6E6" stroke="black" stroke-width="0.5"/>
+            <path d="M115.464 74.8386L139.758 115.328C140.944 117.304 140.196 119.873 138.134 120.904C134.756 122.593 130.661 121.745 128.231 118.854L100.32 85.6427C96.5962 81.2122 97.7623 74.4956 102.761 71.5795C107.174 69.0055 112.836 70.4582 115.464 74.8386Z" fill="#E6E6E6" stroke="black" stroke-width="0.5"/>
+            <path d="M136.039 115.477L155.164 115.252C156.481 115.236 157.719 115.883 158.458 116.973C159.965 119.196 158.843 122.242 156.255 122.957L137.819 128.051C134.422 128.989 130.904 127.005 129.95 123.612C128.811 119.558 131.828 115.527 136.039 115.477Z" fill="#E6E6E6" stroke="black" stroke-width="0.5"/>
+            <path d="M13.3362 2.83226L15.5601 2.07694C22.6661 -0.336396 30.1332 4.62594 30.6603 12.112L31.1282 18.7548C31.5027 24.0731 26.7485 28.3096 21.5083 27.3271C14.7038 26.0512 9.30677 20.8561 7.77246 14.1052L7.55827 13.1627C6.55487 8.74775 9.04909 4.28824 13.3362 2.83226Z" fill="#E6E6E6" stroke="black" stroke-width="0.5"/>
+            </g>
+            <defs>
+            <clipPath id="clip0_2_2">
+            <rect width="160" height="130" fill="white"/>
+            </clipPath>
+            </defs>
+            </svg>
+            
+        </div>
+        <div class="end-view-screen-133 absolute-center">
+          <div class="end-view-screen-177 absolute-center"></div>
+          <div class="end-view-screen-239 absolute-center"></div>
+        </div>
+      </div>
+      <div class="end-view-eye line absolute-center"></div>
+      <div class="end-view-elevation line absolute-center"></div>
+      <div class="end-view-horizon line absolute-center"></div>
+      <!-- <div class="end-view-floor line absolute-center"></div> -->
+      <div class="end-view-result"></div>>
     </div>
-    <div class="end-view-horizon absolute-center"></div>
+    <div class="container" style="background-color: black;">
+
+    </div>
   </div>
+
 
   <script>
     if (!Number.prototype.round) {
@@ -88,6 +168,13 @@
       return 2 * Math.tan(fov / 2 * DEG2RAD) * distance;
     }
 
+    const lengthToFov = function (length, distance) {
+      const RAD2DEG = 57.29577951;
+      return 2 * Math.atan(length / 2 / distance) * RAD2DEG;
+    }
+
+    const EYE_HEIGHT = 1.2;
+
     const getPresetJSON = function () {
       return {
         "preset": "自定义",
@@ -97,7 +184,7 @@
             "0": {
               "fov": 70,
               "distance": 12,
-              "eye": 1.2,
+              "eye": EYE_HEIGHT,
               "elevation": -3
             }
           },
@@ -105,7 +192,7 @@
             "0": {
               "fov": 69.33,
               "distance": 47,
-              "eye": 1.2,
+              "eye": EYE_HEIGHT,
               "elevation": 1
             }
           },
@@ -113,7 +200,7 @@
             "0": {
               "fov": 64,
               "distance": 8,
-              "eye": 1.2,
+              "eye": EYE_HEIGHT,
               "elevation": 16.36
             }
           },
@@ -121,7 +208,7 @@
             "0": {
               "fov": 61.93,
               "distance": 10,
-              "eye": 1.2,
+              "eye": EYE_HEIGHT,
               "elevation": 16.36
             }
           },
@@ -129,7 +216,7 @@
             "0": {
               "fov": 65.15,
               "distance": 18,
-              "eye": 1.2,
+              "eye": EYE_HEIGHT,
               "elevation": 1
             }
           },
@@ -137,7 +224,7 @@
             "0": {
               "fov": 56.89,
               "distance": 36,
-              "eye": 1.2,
+              "eye": EYE_HEIGHT,
               "elevation": 1
             }
           },
@@ -151,18 +238,27 @@
     const gui = new dat.GUI({ load: getPresetJSON() });
     gui.width = 266;
     gui.remember(config);
-    gui.add(config, 'fov', 5, 160).step(0.01).name('水平 FOV').onChange(compute);
+    gui.add(config, 'fov', 5, 120).step(0.01).name('水平 FOV').onChange(compute);
     gui.add(config, 'distance', 1, 60).step(0.01).name('最佳观影距离').onChange(compute);
-    gui.add(config, 'eye', 0.25, 2).step(0.01).name('视线高度').onChange(compute);
-    gui.add(config, 'elevation', -30, 30).step(0.01).name('俯角').onChange(function(value) {
+    gui.add(config, 'eye', 0.25, 8).step(0.01).name('视线高度').onChange(compute);
+    gui.add(config, 'elevation', -30, 30).step(0.01).name('俯角').onChange(function (value) {
       this.name(value < 0 ? "俯角" : "仰角");
       compute();
     });
 
     const endView = document.querySelector('.end-view');
+    
     const endViewUser = document.querySelector('.end-view-user');
+    const endViewUserWidth = endViewUser.offsetWidth;
+    const endViewUserHeight = endViewUser.offsetHeight;
+    
+    const endViewEye = document.querySelector('.end-view-eye');
+
+    const endViewElevation = document.querySelector('.end-view-elevation');
+    const endViewScreen = document.querySelector('.end-view-screen-133');
+
     const endViewFloor = document.querySelector('.end-view-floor');
-    const endViewScreen = document.querySelector('.end-view-screen');
+    const endViewResult = document.querySelector('.end-view-result');
 
     let result;
 
@@ -174,26 +270,28 @@
       };
       const centerY = fovToLength(config.elevation, config.distance) + Number(config.eye);
       const elevation = centerY - height["4-3"] / 2;
+      const slope = lengthToFov(elevation, config.distance);
 
-      endView.style.transform = `scale(${(document.body.clientWidth / 2) / ((config.distance + 2) * 100)})`;
-      endViewUser.style.transform = `translateX(-${config.distance * 100 / 2}px) translateY(calc(-50% + 120px - ${config.eye * 100}px))`;
+      const endViewMargin = 1;
+      const endViewGlobalScale = (document.body.clientWidth / 2) / ((config.distance + endViewMargin * 2) * 100);
+
+      endView.style.transform = `scale(${endViewGlobalScale})`;
+      endViewUser.style.transform = `translateX(-${config.distance * 100 / 2}px) translateY(${-(endViewUserHeight / 2) - (config.eye - EYE_HEIGHT) * 100}px)`;
+      const endViewEyeHeight = config.eye * 100 * endViewGlobalScale;
+      const endViewEyeStart = endViewMargin * 100 * endViewGlobalScale;
+      endViewEye.style.transform = `translateX(${endViewEyeStart}px) translateY(calc(-50% - ${endViewEyeHeight}px))`;
+      endViewElevation.style.transform = `translateX(${endViewEyeStart}px) translateY(calc(-50% - ${endViewEyeHeight}px)) rotate(${-config.elevation}deg)`;
+      
       endViewScreen.style.height = `${height["4-3"] * 100}px`;
       endViewScreen.style.transform = `translateX(${config.distance * 100 / 2}px) translateY(${-centerY * 100}px)`;
-      result = { width, height, centerY, elevation };
+      
+      // endViewFloor.style.transform = `translateX(${endViewEyeStart + endViewUserWidth / 4}px) translateY(calc(-50% - ${(config.eye - EYE_HEIGHT) * 100}px)) rotate(${-slope}deg)`;
+
+      const result = `屏幕宽：${width.toFixed(2)} 米 <br>4:3 屏幕高：${height["4-3"].toFixed(2)} 米 <br>16:9 画面高：${height["16-9"].toFixed(2)} 米 <br>屏幕中心坐标 Y：${centerY.toFixed(2)} 米 <br>屏幕底边距地面：${elevation.toFixed(2)} 米 <br>用户到屏幕底边坡度：${slope.toFixed(2)} 度`;
+      endViewResult.innerHTML = result;
     }
 
     compute();
-
-    
-
-    function update() {
-      endView.style.width = `${result.width.round(2)}px`;
-      endView.style.height = `${result.height["4-3"].round(2)}px`;
-      endView.style.marginTop = `${result.elevation.round(2)}px`;
-      endViewUser.style.top = `${result.centerY.round(2)}px`;
-      endViewScreen.style.top = `${result.centerY.round(2)}px`;
-      endViewScreen.style.left = `${result.width.round(2)}px`;
-    }
 
   </script>
 </body>
