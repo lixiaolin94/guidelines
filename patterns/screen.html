@@ -266,7 +266,8 @@
       const width = fovToLength(config.fov, config.distance);
       const height = {
         "4-3": width * 3 / 4,
-        "16-9": width * 9 / 16
+        "16-9": width * 9 / 16,
+        "2.39-1": width * 1 / 2.39
       };
       const centerY = fovToLength(config.elevation, config.distance) + Number(config.eye);
       const elevation = centerY - height["4-3"] / 2;
@@ -287,7 +288,7 @@
       
       // endViewFloor.style.transform = `translateX(${endViewEyeStart + endViewUserWidth / 4}px) translateY(calc(-50% - ${(config.eye - EYE_HEIGHT) * 100}px)) rotate(${-slope}deg)`;
 
-      const result = `屏幕宽：${width.toFixed(2)} 米 <br>4:3 屏幕高：${height["4-3"].toFixed(2)} 米 <br>16:9 画面高：${height["16-9"].toFixed(2)} 米 <br>屏幕中心坐标 Y：${centerY.toFixed(2)} 米 <br>屏幕底边距地面：${elevation.toFixed(2)} 米 <br>用户到屏幕底边坡度：${slope.toFixed(2)} 度`;
+      const result = `屏幕宽：${width.toFixed(2)} 米 <br>4:3 屏幕高：${height["4-3"].toFixed(2)} 米 <br>16:9 画面高：${height["16-9"].toFixed(2)} 米 <br>2.39:1 画面高：${height["2.39-1"].toFixed(2)} 米 <br>屏幕中心坐标 Y：${centerY.toFixed(2)} 米 <br>屏幕底边距地面：${elevation.toFixed(2)} 米 <br>用户到屏幕底边坡度：${slope.toFixed(2)} 度`;
       endViewResult.innerHTML = result;
     }
 
